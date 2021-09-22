@@ -56,10 +56,16 @@ class ProductController extends Controller
         $input = $request->all();
 
         if ($image = $request->file('image')) {
-            $destinationPath = 'image/';
-            $profileImage    = date('YmdHis') . "." . $image->getClientOriginalExtension();
-            $image->move($destinationPath, $profileImage);
-            $input['image'] = "$profileImage";
+            // $destinationPath = 'image/';
+            // $profileImage    = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            // $image->move($destinationPath, $profileImage);
+            // $input['image'] = "$profileImage";
+
+            $imageName = time() . '.' . $image->extension();
+            $path      = $image->storeAs(
+                'uploades', $imageName
+            );
+            $input['image'] = $path;
         }
 
         $this->productRepository->store($input);
@@ -111,10 +117,22 @@ class ProductController extends Controller
         $input = $request->all();
 
         if ($image = $request->file('image')) {
-            $destinationPath = 'image/';
-            $profileImage    = date('YmdHis') . "." . $image->getClientOriginalExtension();
-            $image->move($destinationPath, $profileImage);
-            $input['image'] = "$profileImage";
+            // ====== as usual method ==========
+            // $destinationPath = 'image/';
+            // $profileImage    = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            // $image->move($destinationPath, $profileImage);
+            // $input['image'] = "$profileImage";
+
+            // ========= store with name method ==================
+            $imageName = time() . '.' . $image->extension();
+            $path      = $image->storeAs(
+                'uploades', $imageName
+            );
+            $input['image'] = $path;
+
+            // =========== store without name method =============
+            // $input['image'] = $request->file('image')->store('uploades');
+
         } else {
             unset($input['image']);
         }
