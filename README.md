@@ -27,6 +27,12 @@ npm install
 npm run dev
 ```
 
+### migrate databse
+
+```
+php artisan migrate
+```
+
 ### genrate app key
 
 ```

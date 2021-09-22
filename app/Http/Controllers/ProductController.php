@@ -3,10 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Repository\ProductRepositoryInterface;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+
+    private $productRepository;
+
+    public function __construct(ProductRepositoryInterface $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,12 +23,12 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::latest()->paginate(5);
-  
-        return view('products.index',compact('products'))
+        $products = $this->productRepository->paginate();
+
+        return view('products.index', compact('products'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
-   
+
     /**
      * Show the form for creating a new resource.
      *
@@ -29,7 +38,7 @@ class ProductController extends Controller
     {
         return view('products.create');
     }
-  
+
     /**
      * Store a newly created resource in storage.
      *
@@ -39,26 +48,26 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'name'   => 'required',
             'detail' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image'  => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $input = $request->all();
 
         if ($image = $request->file('image')) {
             $destinationPath = 'image/';
-            $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            $profileImage    = date('YmdHis') . "." . $image->getClientOriginalExtension();
             $image->move($destinationPath, $profileImage);
             $input['image'] = "$profileImage";
         }
-  
-        Product::create($input);
-   
+
+        $this->productRepository->store($input);
+
         return redirect()->route('products.index')
-                        ->with('success','Product created successfully.');
+            ->with('success', 'Product created successfully.');
     }
-   
+
     /**
      * Display the specified resource.
      *
@@ -67,9 +76,11 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return view('products.show',compact('product'));
+        $product = $this->productRepository->find($product->id);
+
+        return view('products.show', compact('product'));
     }
-   
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -78,9 +89,11 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('products.edit',compact('product'));
+        $product = $this->productRepository->find($product->id);
+
+        return view('products.edit', compact('product'));
     }
-  
+
     /**
      * Update the specified resource in storage.
      *
@@ -91,27 +104,27 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $request->validate([
-            'name' => 'required',
-            'detail' => 'required'
+            'name'   => 'required',
+            'detail' => 'required',
         ]);
 
         $input = $request->all();
 
         if ($image = $request->file('image')) {
             $destinationPath = 'image/';
-            $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            $profileImage    = date('YmdHis') . "." . $image->getClientOriginalExtension();
             $image->move($destinationPath, $profileImage);
             $input['image'] = "$profileImage";
-        }else{
+        } else {
             unset($input['image']);
         }
-        
-        $product->update($input);
-  
+
+        $this->productRepository->update($product->id, $input);
+
         return redirect()->route('products.index')
-                        ->with('success','Product updated successfully');
+            ->with('success', 'Product updated successfully');
     }
-  
+
     /**
      * Remove the specified resource from storage.
      *
@@ -120,9 +133,9 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $product->delete();
-  
+        $this->productRepository->destroy($product->id);
+
         return redirect()->route('products.index')
-                        ->with('success','Product deleted successfully');
+            ->with('success', 'Product deleted successfully');
     }
 }
