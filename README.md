@@ -15,6 +15,18 @@ cp .env.example .env
 composer install
 ```
 
+### install nodemodules files
+
+```
+npm install
+```
+
+### minify css or js
+
+```
+npm run dev
+```
+
 ### genrate app key
 
 ```
