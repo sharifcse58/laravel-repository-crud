@@ -18,4 +18,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('jobs', JobController::class);
+Route::group([
+    'middleware' => ['auth'],
+], function () {
+    Route::resource('jobs', JobController::class);
+});
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
