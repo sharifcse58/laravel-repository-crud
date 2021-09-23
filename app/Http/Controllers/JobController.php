@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use App\Repository\ProductRepositoryInterface;
+use App\Models\Job;
+use App\Repository\JobRepositoryInterface;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class JobController extends Controller
 {
 
-    private $productRepository;
+    private $jobRepository;
 
-    public function __construct(ProductRepositoryInterface $productRepository)
+    public function __construct(JobRepositoryInterface $jobRepository)
     {
-        $this->productRepository = $productRepository;
+        $this->jobRepository = $jobRepository;
     }
 
     /**
@@ -23,9 +23,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = $this->productRepository->paginate();
+        $jobs = $this->jobRepository->paginate();
 
-        return view('products.index', compact('products'))
+        return view('jobs.index', compact('jobs'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
@@ -36,7 +36,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('products.create');
+        return view('jobs.create');
     }
 
     /**
@@ -48,18 +48,14 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'   => 'required',
-            'detail' => 'required',
-            'image'  => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'title'       => 'required',
+            'image'       => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'description' => 'required',
         ]);
 
         $input = $request->all();
 
         if ($image = $request->file('image')) {
-            // $destinationPath = 'image/';
-            // $profileImage    = date('YmdHis') . "." . $image->getClientOriginalExtension();
-            // $image->move($destinationPath, $profileImage);
-            // $input['image'] = "$profileImage";
 
             $imageName = time() . '.' . $image->extension();
             $path      = $image->storeAs(
@@ -68,50 +64,50 @@ class ProductController extends Controller
             $input['image'] = $path;
         }
 
-        $this->productRepository->store($input);
+        $this->jobRepository->store($input);
 
-        return redirect()->route('products.index')
-            ->with('success', 'Product created successfully.');
+        return redirect()->route('jobs.index')
+            ->with('success', 'Job created successfully.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Product  $product
+     * @param  \App\Job  $job
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show(Job $job)
     {
-        $product = $this->productRepository->find($product->id);
+        $job = $this->jobRepository->find($job->id);
 
-        return view('products.show', compact('product'));
+        return view('jobs.show', compact('job'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Product  $product
+     * @param  \App\Job  $job
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit(Job $job)
     {
-        $product = $this->productRepository->find($product->id);
+        $job = $this->jobRepository->find($job->id);
 
-        return view('products.edit', compact('product'));
+        return view('jobs.edit', compact('job'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Product  $product
+     * @param  \App\Job  $job
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, Job $job)
     {
         $request->validate([
-            'name'   => 'required',
-            'detail' => 'required',
+            'title'       => 'required',
+            'description' => 'required',
         ]);
 
         $input = $request->all();
@@ -137,23 +133,23 @@ class ProductController extends Controller
             unset($input['image']);
         }
 
-        $this->productRepository->update($product->id, $input);
+        $this->jobRepository->update($job->id, $input);
 
-        return redirect()->route('products.index')
-            ->with('success', 'Product updated successfully');
+        return redirect()->route('jobs.index')
+            ->with('success', 'Job updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Product  $product
+     * @param  \App\Job  $job
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy(Job $job)
     {
-        $this->productRepository->destroy($product->id);
+        $this->jobRepository->destroy($job->id);
 
-        return redirect()->route('products.index')
-            ->with('success', 'Product deleted successfully');
+        return redirect()->route('jobs.index')
+            ->with('success', 'Job deleted successfully');
     }
 }

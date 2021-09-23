@@ -1,13 +1,13 @@
-@extends('products.layout')
+@extends('jobs.layout')
  
 @section('content')
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Laravel 8 Repository CRUD</h2>
+                <h2>Jobs List</h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('products.create') }}"> Create New Product</a>
+                <a class="btn btn-success" href="{{ route('jobs.create') }}"> Create New Job</a>
             </div>
         </div>
     </div>
@@ -27,18 +27,18 @@
             <th width="280px">Action</th>
         </tr>
         
-        @foreach ($products as $product)
+        @foreach ($jobs as $job)
         <tr>
             <td>{{ ++$i }}</td> 
-            <td><img src="{{ asset('storage/'.$product->image) }}" width="100px"></td>
-            <td>{{ $product->name }}</td>
-            <td>{{ $product->detail }}</td>
+            <td>{{ $job->title }}</td>
+            <td><img src="{{ asset('storage/'.$job->image) }}" width="100px"></td>
+            <td>{{ $job->description }}</td>
             <td>
-                <form action="{{ route('products.destroy',$product->id) }}" method="POST">
+                <form action="{{ route('jobs.destroy',$job->id) }}" method="POST">
    
-                    <a class="btn btn-info" href="{{ route('products.show',$product->id) }}">Show</a>
+                    <a class="btn btn-info" href="{{ route('jobs.show',$job->id) }}">Show</a>
     
-                    <a class="btn btn-primary" href="{{ route('products.edit',$product->id) }}">Edit</a>
+                    <a class="btn btn-primary" href="{{ route('jobs.edit',$job->id) }}">Edit</a>
    
                     @csrf
                     @method('DELETE')
@@ -50,6 +50,6 @@
         @endforeach
     </table>
   
-    {!! $products->links() !!}
+    {!! $jobs->links() !!}
       
 @endsection

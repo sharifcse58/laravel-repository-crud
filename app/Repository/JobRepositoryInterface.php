@@ -1,7 +1,7 @@
 <?php
 namespace App\Repository;
 
-interface ProductRepositoryInterface
+interface JobRepositoryInterface
 {
     public function paginate();
     public function find($id);

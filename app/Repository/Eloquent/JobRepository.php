@@ -2,10 +2,11 @@
 
 namespace App\Repository\Eloquent;
 
+use App\Models\Job;
 use App\Models\Product;
-use App\Repository\ProductRepositoryInterface;
+use App\Repository\JobRepositoryInterface;
 
-class ProductRepository extends BaseRepository implements ProductRepositoryInterface
+class JobRepository extends BaseRepository implements JobRepositoryInterface
 {
 
     /**
@@ -13,7 +14,7 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
      *
      * @param Product $model
      */
-    public function __construct(Product $model)
+    public function __construct(Job $model)
     {
         parent::__construct($model);
     }

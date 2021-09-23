@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class Job extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'name', 'detail', 'image'
+    protected $guarded = [
+        'id',
     ];
 }
