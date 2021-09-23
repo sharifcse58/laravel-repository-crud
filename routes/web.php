@@ -24,6 +24,8 @@ Route::group([
     Route::resource('jobs', JobController::class);
 });
 
+Route::get('/job-list', [JobController::class, 'list'])->name('job.list');
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

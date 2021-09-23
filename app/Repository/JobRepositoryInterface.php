@@ -3,6 +3,7 @@ namespace App\Repository;
 
 interface JobRepositoryInterface
 {
+    public function all();
     public function paginate();
     public function find($id);
     public function store($request);

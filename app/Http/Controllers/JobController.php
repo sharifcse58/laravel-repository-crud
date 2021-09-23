@@ -30,6 +30,18 @@ class JobController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function list() {
+        $jobs_lists = $this->jobRepository->all();
+
+        return view('jobs.list', compact('jobs_lists'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
