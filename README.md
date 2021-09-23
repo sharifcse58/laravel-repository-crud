@@ -36,7 +36,7 @@ php artisan migrate
 ### genrate app key
 
 ```
-php artisan key:genrate
+php artisan key:generate
 ```
 ### link storage folder to public folder
 
